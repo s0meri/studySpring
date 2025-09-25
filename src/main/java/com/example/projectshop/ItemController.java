@@ -5,6 +5,7 @@ import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,10 +31,7 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    String writePost(@RequestParam Map<String, Object> formData) {
-        item item = new item();
-        item.setPrice(Integer.parseInt((String) formData.get("price")));
-        item.setTitle((String) formData.get("title"));
+    String writePost(@ModelAttribute item item) {
         ItemRepository.save(item);
         return "redirect:/get";
     }
