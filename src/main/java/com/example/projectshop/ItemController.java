@@ -2,6 +2,7 @@ package com.example.projectshop;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemRepository ItemRepository;
+    private final ItemService ItemService;
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> exceptionHandler() {
+        return ResponseEntity.status(404).body("not found");
+    }
 
     @GetMapping("/list")
     String list(Model model){
@@ -29,9 +36,9 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    String writePost(@ModelAttribute item item) {
-        ItemRepository.save(item);
-        return "redirect:/get";
+    String writePost(String title, Integer price) {
+        ItemService.saveItem(title, price);
+        return "redirect:/list";
     }
     @GetMapping("/detail/{id}")
     String detail(@PathVariable Long id,Model model) {
@@ -42,7 +49,7 @@ public class ItemController {
             model.addAttribute("item", item);
             return "detail.html";
         } else {
-            throw new RuntimeException("item not found");
+            return "error";
         }
     }
 }
