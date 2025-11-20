@@ -6,13 +6,30 @@
 </head>
 <body>
 <div th:replace="~{nav.html :: navbar}"></div>
+
 <div class="card" th:each="i : ${item}">
     <img src="https://placehold.co/300" alt="집에 가고 싶어">
     <div>
-<!--        <h4 th:text="${i.id}">아이디</h4>-->
-        <a th:href="@{'/detail/' + ${i.id} }" th:text="${i.title}">작성자 없음</a>
+        <a th:href="@{'/detail/' + ${i.id}}" th:text="${i.title}">작성자 없음</a>
+        <a th:href="@{'/edit/' + ${i.id}}">✏️수정</a>
         <h4 th:text="${i.price}">7억</h4>
+        <button class="btn" th:data-id="${i.id}">삭제</button>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+
+            fetch(`/delete/${id}`, {
+                method: 'delete',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: id })
+            })
+        });
+        window.load();
+    });
+</script>
 </body>
 </html>

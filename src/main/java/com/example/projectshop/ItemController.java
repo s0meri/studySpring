@@ -14,7 +14,7 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
-    private final ItemRepository ItemRepository;
+    //    private final ItemRepository ItemRepository;
     private final ItemService ItemService;
 
     @ExceptionHandler(Exception.class)
@@ -23,8 +23,9 @@ public class ItemController {
     }
 
     @GetMapping("/list")
-    String list(Model model){
-        List<item> result = ItemRepository.findAll();
+    String list(Model model) {
+//        List<item> result = ItemRepository.findAll();
+        List<item> result = ItemService.itemFindAll();
         model.addAttribute("item", result);
 
         return "itemList.html";
@@ -40,10 +41,11 @@ public class ItemController {
         ItemService.saveItem(title, price);
         return "redirect:/list";
     }
+
     @GetMapping("/detail/{id}")
-    String detail(@PathVariable Long id,Model model) {
-        Optional<item> result = ItemRepository.findById(id);
-        if (result.isPresent()){
+    String detail(@PathVariable Long id, Model model) {
+        Optional<item> result = ItemService.itemFindById(id);
+        if (result.isPresent()) {
             item item = result.get();
             System.out.println(result.get());
             model.addAttribute("item", item);
@@ -51,5 +53,29 @@ public class ItemController {
         } else {
             return "error";
         }
+    }
+
+    @GetMapping("/edit/{id}")
+    String edit(@PathVariable Long id, Model model) {
+        Optional<item> result = ItemService.itemFindById(id);
+        if (result.isPresent()) {
+            model.addAttribute("data", result.get());
+            return "edit.html";
+        } else {
+            return "redirect:/list";
+        }
+    }
+
+    @PostMapping("/edit")
+    String editItem(String title, Integer price, Long id) {
+        item item = new item();
+        ItemService.saveItem(title,price,id);
+        return "redirect:/list";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    void deleteItem(@PathVariable Long id) {
+        ItemService.deleteItem(id);
+//        return "redirect:/list";
     }
 }

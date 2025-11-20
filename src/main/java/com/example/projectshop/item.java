@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 public class item {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 200)
     private String title;
@@ -22,5 +22,8 @@ public class item {
     public void setPrice(Integer price) {
         if(price < 0) price = 0;
         this.price = price;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 }
