@@ -2,6 +2,7 @@ package com.example.projectshop;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,9 @@ public class ItemController {
     String list(Model model) {
         List<item> result = itemService.itemFindAll();
         model.addAttribute("item", result);
-
+        Page<item> page = itemService.itemFindByPage(0, 4);
+        model.addAttribute("number",page.getTotalPages());
+        model.addAttribute("items", page);
         return "itemList.html";
     }
 
@@ -82,9 +85,10 @@ public class ItemController {
     }
 
     @GetMapping("/list/page/{cursor}")
-    String getListPage(@PathVariable int cursor, Model model) {
-        Page<item> result = itemService.itemFindByPage(cursor-1, 5);
-        model.addAttribute("items", result);
-        return "list.html";
+    String getListPage(@PathVariable Integer cursor, Model model) {
+        Page<item> result = itemService.itemFindByPage(cursor-1, 4);
+        model.addAttribute("number",result.getTotalPages());
+        model.addAttribute("items", result.getContent());
+        return "itemList.html";
     }
 }

@@ -17,6 +17,14 @@
     </div>
 </div>
 
+<div th:with="count=${number}" style="display: flex; gap: 10px;">
+    <div th:each="num : ${#numbers.sequence(1, count)}">
+        <a th:href="@{'/list/page/' + ${num}}">
+            <p th:text="${num}"></p>
+        </a>
+    </div>
+</div>
+
 <script>
     document.querySelectorAll('.btn').forEach(btn => {
         btn.addEventListener('click', function() {
