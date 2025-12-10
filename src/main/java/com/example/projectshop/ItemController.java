@@ -25,11 +25,9 @@ public class ItemController {
 
     @GetMapping("/list")
     String list(Model model) {
-        List<item> result = itemService.itemFindAll();
-        model.addAttribute("item", result);
         Page<item> page = itemService.itemFindByPage(0, 4);
         model.addAttribute("number",page.getTotalPages());
-        model.addAttribute("items", page);
+        model.addAttribute("item", page);
         return "itemList.html";
     }
 
