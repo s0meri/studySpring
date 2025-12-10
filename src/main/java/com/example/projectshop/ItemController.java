@@ -1,14 +1,14 @@
 package com.example.projectshop;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -37,8 +37,12 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    String writePost(String title, Integer price) {
-        ItemService.saveItem(title, price);
+    String writePost(String title, Integer price, Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return "redirect:/login";
+        }
+        String username = auth.getName();
+        ItemService.saveItem(title, price, username);
         return "redirect:/list";
     }
 
@@ -68,7 +72,6 @@ public class ItemController {
 
     @PostMapping("/edit")
     String editItem(String title, Integer price, Long id) {
-        item item = new item();
         ItemService.saveItem(title,price,id);
         return "redirect:/list";
     }

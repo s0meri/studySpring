@@ -1,6 +1,8 @@
 package com.example.projectshop.mamber;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,11 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/register")
-    public String register() {
-        return "register.html";
+    public String register(Authentication auth) {
+        if(auth!=null){
+            return "redirect:/list";
+        }
+        return "register";
     }
 
     @GetMapping("/login")
@@ -35,5 +40,12 @@ public class MemberController {
         memberRepository.save(member);
 
         return "redirect:/list";
+    }
+    @GetMapping("/my-page")
+    public String myPage(Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return "redirect:/login";
+        }
+        return "mypage.html";
     }
 }

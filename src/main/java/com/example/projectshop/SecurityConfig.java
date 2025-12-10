@@ -21,6 +21,10 @@ public class SecurityConfig {
         http.formLogin((formLogin) -> formLogin.loginPage("/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/fail"));
+        http.logout(logout -> logout.logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID"));
         return http.build();
     }
 
