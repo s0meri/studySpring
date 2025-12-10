@@ -87,8 +87,8 @@ public class ItemController {
     @GetMapping("/list/page/{cursor}")
     String getListPage(@PathVariable Integer cursor, Model model) {
         Page<item> result = itemService.itemFindByPage(cursor-1, 4);
-        model.addAttribute("number",result.getTotalPages());
-        model.addAttribute("items", result.getContent());
+        model.addAttribute("number", result.getTotalPages());
+        model.addAttribute("item", result.getContent());
         return "itemList.html";
     }
 }
