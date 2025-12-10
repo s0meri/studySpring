@@ -1,6 +1,7 @@
 package com.example.projectshop;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,8 +15,7 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
-    //    private final ItemRepository ItemRepository;
-    private final ItemService ItemService;
+    private final ItemService itemService;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exceptionHandler() {
@@ -24,8 +24,7 @@ public class ItemController {
 
     @GetMapping("/list")
     String list(Model model) {
-//        List<item> result = ItemRepository.findAll();
-        List<item> result = ItemService.itemFindAll();
+        List<item> result = itemService.itemFindAll();
         model.addAttribute("item", result);
 
         return "itemList.html";
@@ -42,13 +41,13 @@ public class ItemController {
             return "redirect:/login";
         }
         String username = auth.getName();
-        ItemService.saveItem(title, price, username);
+        itemService.saveItem(title, price, username);
         return "redirect:/list";
     }
 
     @GetMapping("/detail/{id}")
     String detail(@PathVariable Long id, Model model) {
-        Optional<item> result = ItemService.itemFindById(id);
+        Optional<item> result = itemService.itemFindById(id);
         if (result.isPresent()) {
             item item = result.get();
             System.out.println(result.get());
@@ -61,7 +60,7 @@ public class ItemController {
 
     @GetMapping("/edit/{id}")
     String edit(@PathVariable Long id, Model model) {
-        Optional<item> result = ItemService.itemFindById(id);
+        Optional<item> result = itemService.itemFindById(id);
         if (result.isPresent()) {
             model.addAttribute("data", result.get());
             return "edit.html";
@@ -72,13 +71,20 @@ public class ItemController {
 
     @PostMapping("/edit")
     String editItem(String title, Integer price, Long id) {
-        ItemService.saveItem(title,price,id);
+        itemService.saveItem(title, price, id);
         return "redirect:/list";
     }
 
     @DeleteMapping("/delete/{id}")
     void deleteItem(@PathVariable Long id) {
-        ItemService.deleteItem(id);
+        itemService.deleteItem(id);
 //        return "redirect:/list";
+    }
+
+    @GetMapping("/list/page/{cursor}")
+    String getListPage(@PathVariable int cursor, Model model) {
+        Page<item> result = itemService.itemFindByPage(cursor-1, 5);
+        model.addAttribute("items", result);
+        return "list.html";
     }
 }

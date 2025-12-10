@@ -3,6 +3,8 @@ package com.example.projectshop;
 import com.example.projectshop.mamber.Member;
 import com.example.projectshop.mamber.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,5 +42,8 @@ public class ItemService {
     }
     public void deleteItem(Long id){
         itemRepository.deleteById(id);
+    }
+    public Page<item> itemFindByPage(int page, int size) {
+        return itemRepository.findAll(PageRequest.of(page, size));
     }
 }
