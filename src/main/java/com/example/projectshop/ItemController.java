@@ -91,4 +91,10 @@ public class ItemController {
         model.addAttribute("item", result.getContent());
         return "itemList.html";
     }
+
+    @PostMapping("/search")
+    String postSearch(@RequestParam String searchText) {
+        itemService.itemFindAllByColumn(searchText);
+        return "itemList.html";
+    }
 }
