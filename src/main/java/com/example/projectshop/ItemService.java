@@ -47,6 +47,9 @@ public class ItemService {
         return itemRepository.findAll(PageRequest.of(page, size));
     }
     public List<item> itemFindAllByColumn(String searchText){
-        return itemRepository.findAllByTitleContains(searchText);
+        if (searchText == null || searchText.isBlank()) {
+            return itemRepository.findAll();
+        }
+        return itemRepository.searchByTitleFullText(searchText);
     }
 }
