@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:replace="~{nav.html :: navbar}"></div>
-<form action="/search" method="POST">
+<form th:action="@{/search}" method="get">
     <input name="searchText" style="display:inline">
     <button type="submit">검색</button>
 </form>
