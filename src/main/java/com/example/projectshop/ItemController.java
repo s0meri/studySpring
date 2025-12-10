@@ -92,9 +92,11 @@ public class ItemController {
         return "itemList.html";
     }
 
-    @PostMapping("/search")
-    String postSearch(@RequestParam String searchText) {
-        itemService.itemFindAllByColumn(searchText);
+    @GetMapping("/search")
+    String search(@RequestParam(required = false, defaultValue = "") String searchText, Model model) {
+        List<item> result = itemService.itemFindAllByColumn(searchText);
+        model.addAttribute("item", result);
+        model.addAttribute("number", 1);
         return "itemList.html";
     }
 }
