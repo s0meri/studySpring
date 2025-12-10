@@ -90,10 +90,15 @@ public class ItemController {
     }
 
     @GetMapping("/search")
+    String searchPage() {
+        return "search.html";
+    }
+
+    @PostMapping("/search")
     String search(@RequestParam(required = false, defaultValue = "") String searchText, Model model) {
         List<item> result = itemService.itemFindAllByColumn(searchText);
         model.addAttribute("item", result);
-        model.addAttribute("number", 1);
-        return "itemList.html";
+        model.addAttribute("searchText", searchText);
+        return "search.html";
     }
 }
