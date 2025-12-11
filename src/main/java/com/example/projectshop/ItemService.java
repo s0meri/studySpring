@@ -50,6 +50,6 @@ public class ItemService {
         if (searchText == null || searchText.isBlank()) {
             return itemRepository.findAll();
         }
-        return itemRepository.rawQuery1(searchText);
+        return itemRepository.searchByTitleFullText(searchText);
     }
 }
